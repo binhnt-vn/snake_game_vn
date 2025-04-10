@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK with Buildozer
 
 on:
   push:
@@ -8,8 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -20,17 +21,30 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential libssl-dev libffi-dev python3-dev \
-            libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
-            libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev \
-            zlib1g-dev libgstreamer1.0-dev libmtdev-dev \
-            xclip xsel libjpeg-dev
-
-      - name: Install Cython and Buildozer
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install cython virtualenv
-          pip install buildozer
+          sudo apt install -y \
+            build-essential \
+            git \
+            zip \
+            unzip \
+            openjdk-17-jdk \
+            python3-pip \
+            libncurses5 \
+            libstdc++6 \
+            libffi-dev \
+            libssl-dev \
+            libsqlite3-dev \
+            zlib1g-dev \
+            libjpeg-dev \
+            libfreetype6-dev \
+            libgl1-mesa-dev \
+            libgstreamer1.0-dev \
+            libmtdev-dev \
+            libgles2-mesa-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libusb-dev \
+            libsndfile1
+          pip install --upgrade pip
+          pip install buildozer cython
 
       - name: Build APK
         run: |
@@ -39,5 +53,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: my-kivy-game
+          name: snake-game-apk
           path: bin/*.apk
