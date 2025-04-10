@@ -8,6 +8,8 @@ version = 1.0
 requirements = python3,kivy
 orientation = portrait
 fullscreen = 1
+# Nếu file chính không phải tên là "main.py", thêm dòng này:
+main.py = snake_game_kivy.py
 
 [buildozer]
 log_level = 2
