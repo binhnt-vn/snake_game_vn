@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
@@ -30,7 +30,8 @@ jobs:
         buildozer -v android debug
 
     - name: Upload APK
-      uses: actions/upload-artifact@8c0e0a6c1712b64719a8d46a7f4dfb6a8e0f87db
+      uses: actions/upload-artifact@v3
       with:
         name: snake_apk
         path: bin/*.apk
+
