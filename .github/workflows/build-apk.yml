@@ -1,4 +1,4 @@
-name: Build APK with Buildozer
+name: Build Kivy APK
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -21,37 +21,31 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y \
-            build-essential \
-            git \
-            zip \
-            unzip \
-            openjdk-17-jdk \
-            python3-pip \
-            libncurses5 \
-            libstdc++6 \
-            libffi-dev \
-            libssl-dev \
-            libsqlite3-dev \
-            zlib1g-dev \
-            libjpeg-dev \
-            libfreetype6-dev \
-            libgl1-mesa-dev \
-            libgstreamer1.0-dev \
-            libmtdev-dev \
-            libgles2-mesa-dev \
-            libgstreamer-plugins-base1.0-dev \
-            libusb-dev \
-            libsndfile1
-          pip install --upgrade pip
-          pip install buildozer cython
+          sudo apt install -y zip unzip openjdk-17-jdk python3-pip git \
+            libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
+            libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev \
+            zlib1g-dev libgstreamer1.0-dev libmtdev-dev \
+            libgl1-mesa-dev libgles2-mesa-dev \
+            libffi-dev libjpeg-dev libfreetype6-dev build-essential \
+            libopencv-dev libpq-dev ffmpeg
+
+          python3 -m pip install --upgrade pip
+          pip install buildozer Cython
 
       - name: Build APK
         run: |
-          buildozer android debug
+          buildozer init
+          sed -i 's/^# *package.name = .*/package.name = snakegame/' buildozer.spec
+          sed -i 's/^# *package.domain = .*/package.domain = org.test/' buildozer.spec
+          sed -i 's/^# *log_level = 1/log_level = 2/' buildozer.spec
+          sed -i 's/^# *android.api = 27/android.api = 31/' buildozer.spec
+          sed -i 's/^# *android.ndk = 17b/android.ndk = 25b/' buildozer.spec
+          sed -i 's/^# *android.arch = armeabi-v7a/android.arch = arm64-v8a/' buildozer.spec
+          sed -i 's/^# *requirements = python3/requirements = python3,kivy/' buildozer.spec
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: snake-game-apk
+          name: snakegame-apk
           path: bin/*.apk
